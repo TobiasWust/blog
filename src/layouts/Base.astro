@@ -106,6 +106,11 @@ const headerHtml = header({
       import { initHeader } from 'wust-ui';
       initHeader();
     </script>
+
+    <!-- cookie-free, anonymous page views; ignores localhost by default.
+         blog.wust.dev and blog.tobiaswust.de share one site, so prefix the host to tell the languages apart -->
+    <script is:inline>window.goatcounter = { path: function (p) { return location.host + p } }</script>
+    <script is:inline data-goatcounter="https://blogwustdev.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
   </body>
 </html>
 
