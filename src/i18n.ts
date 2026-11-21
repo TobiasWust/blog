@@ -33,7 +33,7 @@ export function canonicalUrl(lang: Locale, path = '/'): string {
   return siteUrls[lang] + path;
 }
 
-export const categoryIds = ['ai-agents', 'tools', 'games'] as const;
+export const categoryIds = ['ai-agents', 'tools', 'games', 'behind-the-scenes'] as const;
 export type Category = (typeof categoryIds)[number];
 
 export const categories: Record<Category, Record<Locale, { name: string; description: string }>> = {
@@ -48,6 +48,10 @@ export const categories: Record<Category, Record<Locale, { name: string; descrip
   games: {
     en: { name: 'Games', description: 'Ad-free games and the factory that builds them.' },
     de: { name: 'Spiele', description: 'Spiele ohne Werbung und die Fabrik, die sie baut.' },
+  },
+  'behind-the-scenes': {
+    en: { name: 'Behind the scenes', description: 'News about this blog and how I work.' },
+    de: { name: 'In eigener Sache', description: 'Neues rund um diesen Blog und meine Arbeitsweise.' },
   },
 };
 
