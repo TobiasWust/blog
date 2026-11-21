@@ -42,7 +42,7 @@ const headerHtml = header({
   ],
   lang,
   langHrefs: { de: lang === 'de' ? href('de', path) : switchHref, en: lang === 'en' ? href('en', path) : switchHref },
-  langLabel: lang === 'de' ? 'Sprache' : 'Language',
+  langLabel: lang === 'de' ? 'This page in English' : 'Diese Seite auf Deutsch',
   themeLabel: t.toggleTheme,
   actions: iconButton({ label: `${t.search} (⌘K)`, icon: icons.search, attrs: 'data-search-open' }),
 });
