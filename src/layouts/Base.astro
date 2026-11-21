@@ -4,6 +4,8 @@ import '@fontsource-variable/space-grotesk';
 import '../styles/global.css';
 import { absoluteUrl, canonicalUrl, href, mainSiteUrls, otherLocale, ui, type Locale } from '../i18n';
 import Search from '../components/Search.astro';
+import 'wust-ui/header.css';
+import { header, iconButton, icons, themeScript } from 'wust-ui';
 
 interface Props {
   lang: Locale;
@@ -31,8 +33,16 @@ const canonicalHref = canonical ?? canonicalUrl(lang, path);
 const switchHref = absoluteUrl(other, alternatePath ?? '/');
 const ogImage = image ? new URL(image, canonicalUrl(lang)).toString() : undefined;
 
-// only applies a stored override; without one, CSS follows the system preference
-const themeScript = `try{const s=localStorage.getItem('theme');if(s==='light'||s==='dark')document.documentElement.dataset.theme=s}catch(e){}`;
+// the shared top bar of all wust.dev sites (github.com/TobiasWust/wust-ui)
+const headerHtml = header({
+  brand: { href: href(lang, '/'), logoSrc: '/tw.svg', label: 'blog', ariaLabel: t.home },
+  links: [{ href: mainSiteUrls[lang], label: t.mainSite }],
+  lang,
+  langHrefs: { de: lang === 'de' ? href('de', path) : switchHref, en: lang === 'en' ? href('en', path) : switchHref },
+  langLabel: lang === 'de' ? 'Sprache' : 'Language',
+  themeLabel: t.toggleTheme,
+  actions: iconButton({ label: `${t.search} (⌘K)`, icon: icons.search, attrs: 'data-search-open' }),
+});
 ---
 
 <!doctype html>
@@ -72,23 +82,7 @@ const themeScript = `try{const s=localStorage.getItem('theme');if(s==='light'||s
   </head>
   <body>
     <a class="skip visually-hidden" href="#main">Skip to content</a>
-    <header class="nav" lang={lang}>
-      <a class="brand" href={href(lang, '/')} aria-label={t.home}>
-        <img src="/tw.svg" alt="" width="56" height="26" />
-        <span>blog</span>
-      </a>
-      <div class="actions">
-        <button class="icon-button" type="button" data-search-open aria-label={t.search} title={`${t.search} (⌘K)`}>
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-        <button class="icon-button" type="button" data-theme-toggle aria-label={t.toggleTheme} title={t.toggleTheme}>
-          <svg class="sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg>
-          <svg class="moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="currentColor"/></svg>
-        </button>
-        <a class="lang-switch" href={switchHref} hreflang={other} lang={other} title={t.switchLanguageLabel}>{other.toUpperCase()}</a>
-        <a class="button button--small" href={mainSiteUrls[lang]}>{t.mainSite}</a>
-      </div>
-    </header>
+    <Fragment set:html={headerHtml} />
 
     <main id="main">
       <slot />
@@ -109,13 +103,8 @@ const themeScript = `try{const s=localStorage.getItem('theme');if(s==='light'||s
     <Search lang={lang} />
 
     <script>
-      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
-        const root = document.documentElement;
-        const current = root.dataset.theme ?? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        const next = current === 'light' ? 'dark' : 'light';
-        root.dataset.theme = next;
-        try { localStorage.setItem('theme', next); } catch {}
-      });
+      import { initHeader } from 'wust-ui';
+      initHeader();
     </script>
   </body>
 </html>
@@ -130,80 +119,6 @@ const themeScript = `try{const s=localStorage.getItem('theme');if(s==='light'||s
     padding: 0.5rem 1rem;
     background: var(--wu-orange);
     color: var(--wu-black);
-  }
-
-  .nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.5rem var(--gutter);
-    background: var(--nav-bg);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--card-border);
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    text-decoration: none;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: var(--step-0);
-  }
-
-  .brand span {
-    padding-left: 0.6rem;
-    border-left: 1px solid var(--card-border);
-  }
-
-  .actions {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
-
-  .icon-button,
-  .lang-switch {
-    display: grid;
-    place-items: center;
-    min-width: 40px;
-    height: 40px;
-    padding: 0 0.5rem;
-    border-radius: 999px;
-    border: 1px solid transparent;
-    background: none;
-    color: var(--text);
-    font: 600 var(--step--1) var(--font-body);
-    text-decoration: none;
-    cursor: pointer;
-    transition: border-color 0.2s ease;
-  }
-
-  .icon-button:hover,
-  .lang-switch:hover { border-color: var(--card-border); }
-
-  .moon { display: none; }
-  :global(:root[data-theme='light']) .sun { display: none; }
-  :global(:root[data-theme='light']) .moon { display: block; }
-  @media (prefers-color-scheme: light) {
-    :global(:root:not([data-theme='dark'])) .sun { display: none; }
-    :global(:root:not([data-theme='dark'])) .moon { display: block; }
-  }
-
-  .button--small {
-    margin-left: 0.35rem;
-    padding: 0.45em 1em;
-    font-size: var(--step--1);
-  }
-
-  @media (max-width: 420px) {
-    .button--small { display: none; }
   }
 
   .footer {
