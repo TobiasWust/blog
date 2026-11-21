@@ -55,7 +55,7 @@ export const ui = {
   en: {
     siteTitle: 'Tobias Wust · Blog',
     siteDescription: 'Notes from a freelance fullstack developer: projects, tools and what I learn while building them.',
-    heroTitle: 'From the workshop',
+    heroTitle: 'So I built it.',
     heroText: 'Notes from my work as a freelance fullstack developer: real projects, real screenshots and the one insight each of them taught me.',
     all: 'All',
     latest: 'Latest',
@@ -97,7 +97,7 @@ export const ui = {
   de: {
     siteTitle: 'Tobias Wust · Blog',
     siteDescription: 'Notizen eines freiberuflichen Fullstack-Entwicklers: Projekte, Werkzeuge und was ich beim Bauen lerne.',
-    heroTitle: 'Aus der Werkstatt',
+    heroTitle: 'Also hab ich’s gebaut.',
     heroText: 'Notizen aus meiner Arbeit als freiberuflicher Fullstack-Entwickler: echte Projekte, echte Screenshots und die eine Erkenntnis, die jedes davon gebracht hat.',
     all: 'Alle',
     latest: 'Neu',
