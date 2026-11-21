@@ -41,7 +41,7 @@ Datenschutz gilt oft als Verzicht. Wenn ein eigenes Werkzeug nur noch einen Aben
 
 ---
 
-Ausprobieren könnt ihr GoatPocket unter **goatpocket.com**, auch ohne eigenes Konto mit Demo-Zahlen.
+Ausprobieren könnt ihr GoatPocket unter **[goatpocket.com](https://goatpocket.com)**, auch ohne eigenes Konto mit Demo-Zahlen.
 
 **Welches kleine Werkzeug würdet ihr euch bauen, damit eure Daten nicht mehr über fremde Server laufen?**
 

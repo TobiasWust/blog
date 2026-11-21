@@ -39,9 +39,9 @@ Ich weiß noch nicht, wie ich das finde.
 
 ---
 
-Spielen könnt ihr Thermikdoku direkt im Browser: **thermikdoku.de**. Ohne Werbung, versprochen.
+Spielen könnt ihr Thermikdoku direkt im Browser: **[thermikdoku.de](https://thermikdoku.de)**. Ohne Werbung, versprochen.
 
-Weitere kleine Spiele für zwischendurch sammle ich ab jetzt auf **games.wust.dev**. Ebenfalls ohne Werbung, ohne Anmeldung und offline spielbar.
+Weitere kleine Spiele für zwischendurch sammle ich ab jetzt auf **[games.wust.dev](https://games.wust.dev)**. Ebenfalls ohne Werbung, ohne Anmeldung und offline spielbar.
 
 **Was meint ihr: Holen wir uns mit KI gerade das Internet zurück, oder geben wir es nur an die nächsten Monopole weiter?**
 

@@ -13,7 +13,7 @@ coverAlt: "Cover image: My own app store: no ads, stocked by an AI factory"
 
 ---
 
-So in one day I built two things: **Karakuri**, a factory for browser games, and **games.wust.dev**, the launcher where the games end up. Both were built by the AI agents in Grimoire, my software factory for my own tools.
+So in one day I built two things: **Karakuri**, a factory for browser games, and **[games.wust.dev](https://games.wust.dev)**, the launcher where the games end up. Both were built by the AI agents in Grimoire, my software factory for my own tools.
 
 The name comes from Japanese karakuri puppets: mechanical figures that serve tea without anyone lifting a finger. That's what the factory should do. I describe a game in one sentence, and it handles the rest.
 
@@ -29,13 +29,13 @@ Karakuri checks all of that itself. After every change it opens the game in a re
 
 The real win comes after the building. This is exactly where everything used to stall: setting up hosting, pointing a domain, writing a description, taking screenshots, adding the game to the overview.
 
-Now I enter a domain and tick a box. Karakuri sets up the hosting and puts the game live. Claude writes the description and tags in German and English and picks the categories. The preview image and screenshots come along, and games.wust.dev rebuilds itself. Every new version of a game updates its entry automatically.
+Now I enter a domain and tick a box. Karakuri sets up the hosting and puts the game live. Claude writes the description and tags in German and English and picks the categories. The preview image and screenshots come along, and [games.wust.dev](https://games.wust.dev) rebuilds itself. Every new version of a game updates its entry automatically.
 
 ![On the left the green check with the test results, on the right the "games.wust.dev" tab with the texts in German and English](./2-check-und-portal.png)
 
 ## A launcher instead of a store
 
-games.wust.dev can itself be added to the home screen as an app. On a phone the site then turns into a launcher: search and categories sit at the bottom within thumb reach, and one tap starts the game. No ads, no sign-up, no store that gets a say in what I'm allowed to install.
+[games.wust.dev](https://games.wust.dev) can itself be added to the home screen as an app. On a phone the site then turns into a launcher: search and categories sit at the bottom within thumb reach, and one tap starts the game. No ads, no sign-up, no store that gets a say in what I'm allowed to install.
 
 ![On the left games.wust.dev as a launcher on a phone, on the right GlideSweeper started straight from the launcher](./3-launcher.png)
 
@@ -45,8 +45,8 @@ A clone gets me one ad-free game back. That's nice, but it doesn't scale as long
 
 ---
 
-You can try the launcher at **games.wust.dev**. No ads, promise.
+You can try the launcher at **[games.wust.dev](https://games.wust.dev)**. No ads, promise.
 
 **Which game or app would you want rebuilt ad-free first?**
 
-*Screenshots: real interfaces of Karakuri and games.wust.dev.*
+*Screenshots: real interfaces of Karakuri and [games.wust.dev](https://games.wust.dev).*

@@ -41,7 +41,7 @@ Privacy is often seen as giving something up. When a tool of your own costs just
 
 ---
 
-You can try GoatPocket at **goatpocket.com**, even without an account of your own, using demo numbers.
+You can try GoatPocket at **[goatpocket.com](https://goatpocket.com)**, even without an account of your own, using demo numbers.
 
 **What small tool would you build so your data no longer runs through someone else's servers?**
 

@@ -39,9 +39,9 @@ I don't know yet how I feel about that.
 
 ---
 
-You can play Thermikdoku right in the browser: **thermikdoku.de**. No ads, promise.
+You can play Thermikdoku right in the browser: **[thermikdoku.de](https://thermikdoku.de)**. No ads, promise.
 
-From now on I'll collect more small games for in between at **games.wust.dev**. Also without ads, without sign-up and playable offline.
+From now on I'll collect more small games for in between at **[games.wust.dev](https://games.wust.dev)**. Also without ads, without sign-up and playable offline.
 
 **What do you think: are we taking the internet back with AI, or just handing it to the next monopolies?**
 
