@@ -1,0 +1,41 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PostList from '../../../components/PostList.astro';
+import { locales, ui, type Locale } from '../../../i18n';
+import { getPosts, tagSlug } from '../../../lib/posts';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of locales) {
+    const posts = await getPosts(lang);
+    const tags = new Map<string, string>();
+    for (const p of posts) for (const tag of p.post.data.tags) tags.set(tagSlug(tag), tag);
+    for (const [slug, tag] of tags) paths.push({ params: { lang, tag: slug }, props: { label: tag } });
+  }
+  return paths;
+}
+
+const lang = Astro.params.lang as Locale;
+const slug = Astro.params.tag!;
+const { label } = Astro.props as { label: string };
+const t = ui[lang];
+const all = await getPosts(lang);
+const posts = all.filter((p) => p.post.data.tags.some((tag) => tagSlug(tag) === slug));
+const usedCategories = [...new Set(all.map((p) => p.post.data.category))];
+const title = t.taggedWith(label);
+---
+
+<Base lang={lang} title={title} path={`/tag/${slug}/`} alternatePath={null}>
+  <meta slot="head" name="robots" content="noindex, follow" />
+  <div class="container">
+    <header class="page-head">
+      <h1>#{label}</h1>
+    </header>
+    <PostList lang={lang} posts={posts} usedCategories={usedCategories} />
+  </div>
+</Base>
+
+<style>
+  .page-head { padding-block: var(--space-xl) var(--space-l); }
+  h1 { font-size: var(--step-4); word-break: break-word; }
+</style>

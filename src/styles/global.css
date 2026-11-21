@@ -1,0 +1,216 @@
+/* design tokens taken from wust.dev (tobiaswust2024/src/app/globals.scss) */
+:root {
+  --max-width: 1100px;
+  --prose-width: 70ch;
+  --font-body: 'Inter Variable', system-ui, sans-serif;
+  --font-display: 'Space Grotesk Variable', var(--font-body);
+  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Roboto Mono', monospace;
+
+  --wu-orange: #f68714;
+  --wu-green: #3dba6a;
+  --wu-white: #fef8f8;
+  --wu-blue: #0e1538;
+  --wu-black: #111;
+
+  --step--1: clamp(0.85rem, 0.82rem + 0.15vw, 0.95rem);
+  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --step-1: clamp(1.125rem, 1.05rem + 0.4vw, 1.35rem);
+  --step-2: clamp(1.35rem, 1.2rem + 0.75vw, 1.8rem);
+  --step-3: clamp(1.7rem, 1.4rem + 1.5vw, 2.6rem);
+  --step-4: clamp(2.2rem, 1.6rem + 3vw, 4.2rem);
+
+  --space-xs: 0.5rem;
+  --space-s: 1rem;
+  --space-m: 1.5rem;
+  --space-l: 2.5rem;
+  --space-xl: clamp(3rem, 2rem + 4vw, 6rem);
+  --gutter: clamp(1rem, 4vw, 2rem);
+
+  --card-radius: 24px;
+
+  /* dark is the default, like on wust.dev */
+  --bg: var(--wu-blue);
+  --text: var(--wu-white);
+  --muted: rgba(254, 248, 248, 0.7);
+  --accent-text: var(--wu-orange);
+  --card-border: rgba(254, 248, 248, 0.12);
+  --card-bg: rgba(254, 248, 248, 0.04);
+  --surface: #151d45;
+  --nav-bg: rgba(14, 21, 56, 0.85);
+  --footer-bg: #111;
+  --footer-text: #ddd;
+  --tag: rgba(254, 248, 248, 0.08);
+  --code-bg: rgba(0, 0, 0, 0.35);
+  --shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --bg: #f7f5f4;
+    --text: var(--wu-blue);
+    --muted: #5b6178;
+    --accent-text: #b85f05;
+    --card-border: #e3e4ec;
+    --card-bg: #fff;
+    --surface: #fff;
+    --nav-bg: rgba(247, 245, 244, 0.85);
+    --footer-bg: #ecebe9;
+    --footer-text: #3c4258;
+    --tag: #f0f1f6;
+    --code-bg: #f0f1f6;
+    --shadow-hover: 0 2px 4px rgb(14 21 56 / 0.08), 0 12px 32px rgb(14 21 56 / 0.14);
+    color-scheme: light;
+  }
+}
+
+/* a stored override wins; data-theme is set before first paint by the inline script in Base.astro */
+:root[data-theme='light'] {
+  --bg: #f7f5f4;
+  --text: var(--wu-blue);
+  --muted: #5b6178;
+  --accent-text: #b85f05;
+  --card-border: #e3e4ec;
+  --card-bg: #fff;
+  --surface: #fff;
+  --nav-bg: rgba(247, 245, 244, 0.85);
+  --footer-bg: #ecebe9;
+  --footer-text: #3c4258;
+  --tag: #f0f1f6;
+  --code-bg: #f0f1f6;
+  --shadow-hover: 0 2px 4px rgb(14 21 56 / 0.08), 0 12px 32px rgb(14 21 56 / 0.14);
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  overflow-x: clip;
+}
+
+main {
+  flex: 1;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+p { text-wrap: pretty; }
+
+a { color: inherit; }
+
+img, video { max-width: 100%; height: auto; display: block; }
+
+:focus-visible {
+  outline: 2px solid var(--wu-orange);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: var(--wu-orange);
+  color: var(--wu-black);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  transition: translate 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--wu-orange);
+  box-shadow: var(--shadow-hover);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card:hover { translate: 0 -4px; }
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.3em 0.8em;
+  border-radius: 999px;
+  background: var(--tag);
+  border: 1px solid transparent;
+  color: var(--text);
+  font-size: var(--step--1);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+a.chip:hover { border-color: var(--wu-orange); }
+
+.chip[aria-current='page'] {
+  background: var(--wu-orange);
+  color: var(--wu-black);
+}
+
+.chip--accent { color: var(--accent-text); }
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.6em 1.2em;
+  border-radius: 999px;
+  background: var(--wu-orange);
+  color: var(--wu-black);
+  font-weight: 600;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.button:hover { filter: brightness(1.08); }
+
+.meta {
+  color: var(--muted);
+  font-size: var(--step--1);
+}

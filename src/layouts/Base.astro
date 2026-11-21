@@ -1,0 +1,227 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/space-grotesk';
+import '../styles/global.css';
+import { absoluteUrl, canonicalUrl, href, mainSiteUrls, otherLocale, ui, type Locale } from '../i18n';
+import Search from '../components/Search.astro';
+
+interface Props {
+  lang: Locale;
+  title?: string;
+  description?: string;
+  /** path of this page within its blog, e.g. /my-post/ */
+  path: string;
+  /** language of the page content; differs from lang when a post has no translation yet */
+  contentLang?: Locale;
+  /** canonical URL, defaults to this page */
+  canonical?: string;
+  /** where the language switch leads: the translated page, or the other blog's start page */
+  alternatePath?: string | null;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: Date;
+}
+
+const { lang, title, description, path, contentLang = lang, canonical, alternatePath, image, type = 'website', publishedTime } = Astro.props;
+const t = ui[lang];
+const other = otherLocale(lang);
+const pageTitle = title ? `${title} · ${t.siteTitle}` : t.siteTitle;
+const pageDescription = description ?? t.siteDescription;
+const canonicalHref = canonical ?? canonicalUrl(lang, path);
+const switchHref = absoluteUrl(other, alternatePath ?? '/');
+const ogImage = image ? new URL(image, canonicalUrl(lang)).toString() : undefined;
+
+// only applies a stored override; without one, CSS follows the system preference
+const themeScript = `try{const s=localStorage.getItem('theme');if(s==='light'||s==='dark')document.documentElement.dataset.theme=s}catch(e){}`;
+---
+
+<!doctype html>
+<html lang={contentLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonicalHref} />
+    {alternatePath !== null && alternatePath !== undefined && contentLang === lang && (
+      <>
+        <link rel="alternate" hreflang={lang} href={canonicalUrl(lang, path)} />
+        <link rel="alternate" hreflang={other} href={canonicalUrl(other, alternatePath)} />
+      </>
+    )}
+    <link rel="alternate" type="application/rss+xml" title={t.siteTitle} href={href(lang, '/rss.xml')} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <meta name="theme-color" content="#0e1538" />
+    <meta property="og:site_name" content={t.siteTitle} />
+    <meta property="og:title" content={title ?? t.siteTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalHref} />
+    <meta property="og:locale" content={contentLang === 'de' ? 'de_DE' : 'en_US'} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="author" content="Tobias Wust" />
+    <script is:inline set:html={themeScript} />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip visually-hidden" href="#main">Skip to content</a>
+    <header class="nav" lang={lang}>
+      <a class="brand" href={href(lang, '/')} aria-label={t.home}>
+        <img src="/tw.svg" alt="" width="56" height="26" />
+        <span>Blog</span>
+      </a>
+      <div class="actions">
+        <button class="icon-button" type="button" data-search-open aria-label={t.search} title={`${t.search} (⌘K)`}>
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="icon-button" type="button" data-theme-toggle aria-label={t.toggleTheme} title={t.toggleTheme}>
+          <svg class="sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg>
+          <svg class="moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="currentColor"/></svg>
+        </button>
+        <a class="lang-switch" href={switchHref} hreflang={other} lang={other} title={t.switchLanguageLabel}>{other.toUpperCase()}</a>
+        <a class="button button--small" href={mainSiteUrls[lang]}>{t.mainSite}</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="footer" lang={lang}>
+      <div class="container footer-inner">
+        <p>© {new Date().getFullYear()} Tobias Wust</p>
+        <nav aria-label="Footer">
+          <a href={href(lang, '/rss.xml')}>{t.rss}</a>
+          <a href={mainSiteUrls[lang]}>{t.mainSite}</a>
+          <a href={`${mainSiteUrls[lang]}/imprint`}>{t.imprint}</a>
+          <a href={`${mainSiteUrls[lang]}/privacy`}>{t.privacy}</a>
+        </nav>
+      </div>
+    </footer>
+
+    <Search lang={lang} />
+
+    <script>
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const current = root.dataset.theme ?? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        const next = current === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch {}
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip:focus {
+    position: fixed !important;
+    top: 0.5rem; left: 0.5rem;
+    width: auto; height: auto;
+    clip-path: none;
+    z-index: 200;
+    padding: 0.5rem 1rem;
+    background: var(--wu-orange);
+    color: var(--wu-black);
+  }
+
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem var(--gutter);
+    background: var(--nav-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-1);
+  }
+
+  .brand span {
+    padding-left: 0.6rem;
+    border-left: 1px solid var(--card-border);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .icon-button,
+  .lang-switch {
+    display: grid;
+    place-items: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 0.5rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: none;
+    color: var(--text);
+    font: 600 var(--step--1) var(--font-body);
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .icon-button:hover,
+  .lang-switch:hover { border-color: var(--card-border); }
+
+  .moon { display: none; }
+  :global(:root[data-theme='light']) .sun { display: none; }
+  :global(:root[data-theme='light']) .moon { display: block; }
+  @media (prefers-color-scheme: light) {
+    :global(:root:not([data-theme='dark'])) .sun { display: none; }
+    :global(:root:not([data-theme='dark'])) .moon { display: block; }
+  }
+
+  .button--small {
+    margin-left: 0.35rem;
+    padding: 0.45em 1em;
+    font-size: var(--step--1);
+  }
+
+  @media (max-width: 420px) {
+    .button--small { display: none; }
+  }
+
+  .footer {
+    margin-top: var(--space-xl);
+    background: var(--footer-bg);
+    color: var(--footer-text);
+    font-size: var(--step--1);
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: var(--space-l);
+  }
+
+  .footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+
+  .footer a { text-decoration: none; }
+  .footer a:hover { color: var(--wu-orange); }
+</style>

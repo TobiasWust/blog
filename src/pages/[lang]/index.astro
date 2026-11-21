@@ -1,0 +1,53 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { locales, ui, type Locale } from '../../i18n';
+import { getPosts } from '../../lib/posts';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Locale;
+const t = ui[lang];
+const posts = await getPosts(lang);
+const usedCategories = [...new Set(posts.map((p) => p.post.data.category))];
+---
+
+<Base lang={lang} path="/" alternatePath="/">
+  <div class="container">
+    <section class="hero">
+      <p class="eyebrow">Blog · Tobias Wust</p>
+      <h1>{t.heroTitle}</h1>
+      <p class="lead">{t.heroText}</p>
+    </section>
+    <PostList lang={lang} posts={posts} usedCategories={usedCategories} featureFirst />
+  </div>
+</Base>
+
+<style>
+  .hero {
+    padding-block: var(--space-xl) var(--space-l);
+    max-width: 52rem;
+  }
+
+  .eyebrow {
+    color: var(--accent-text);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: var(--step--1);
+    margin-bottom: var(--space-s);
+  }
+
+  h1 {
+    font-size: var(--step-4);
+    margin-bottom: var(--space-m);
+  }
+
+  .lead {
+    color: var(--muted);
+    font-size: var(--step-1);
+    max-width: 42rem;
+  }
+</style>

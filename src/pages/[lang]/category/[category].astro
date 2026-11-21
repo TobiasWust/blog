@@ -1,0 +1,41 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PostList from '../../../components/PostList.astro';
+import { categories, categoryIds, locales, type Category, type Locale } from '../../../i18n';
+import { getPosts } from '../../../lib/posts';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of locales) {
+    const posts = await getPosts(lang);
+    for (const category of categoryIds) {
+      if (posts.some((p) => p.post.data.category === category)) paths.push({ params: { lang, category } });
+    }
+  }
+  return paths;
+}
+
+const lang = Astro.params.lang as Locale;
+const category = Astro.params.category as Category;
+const all = await getPosts(lang);
+const posts = all.filter((p) => p.post.data.category === category);
+const usedCategories = [...new Set(all.map((p) => p.post.data.category))];
+const { name, description } = categories[category][lang];
+const path = `/category/${category}/`;
+---
+
+<Base lang={lang} title={name} description={description} path={path} alternatePath={path}>
+  <div class="container">
+    <header class="page-head">
+      <h1>{name}</h1>
+      <p class="lead">{description}</p>
+    </header>
+    <PostList lang={lang} posts={posts} active={category} usedCategories={usedCategories} />
+  </div>
+</Base>
+
+<style>
+  .page-head { padding-block: var(--space-xl) var(--space-l); max-width: 48rem; }
+  h1 { font-size: var(--step-4); margin-bottom: var(--space-s); }
+  .lead { color: var(--muted); font-size: var(--step-1); }
+</style>

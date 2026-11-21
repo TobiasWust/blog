@@ -1,0 +1,343 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { absoluteUrl, canonicalUrl, categories, formatDate, href, locales, mainSiteUrls, ui, type Locale } from '../../i18n';
+import { getPosts, tagSlug, type ListedPost } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const paths = [];
+  for (const lang of locales) {
+    const posts = await getPosts(lang);
+    posts.forEach((item, i) => {
+      paths.push({
+        params: { lang, slug: item.slug },
+        props: { item, newer: posts[i - 1], older: posts[i + 1] },
+      });
+    });
+  }
+  return paths;
+}
+
+interface Props { item: ListedPost; newer?: ListedPost; older?: ListedPost }
+const lang = Astro.params.lang as Locale;
+const { item, newer, older } = Astro.props;
+const { post, slug, fallback, postLang, translation, readingMinutes } = item;
+const t = ui[lang];
+const { Content } = await render(post);
+const path = `/${slug}/`;
+
+// a post without translation is shown on the other blog too; its canonical stays with the original
+const canonical = fallback ? canonicalUrl(postLang, path) : canonicalUrl(lang, path);
+const alternatePath = translation ? `/${translation.slug}/` : fallback ? path : null;
+const translateUrl = `https://translate.google.com/translate?sl=${postLang}&tl=${lang}&u=${encodeURIComponent(canonicalUrl(postLang, path))}`;
+const ogImage = await getImage({ src: post.data.cover, width: 1200, format: 'jpg' });
+---
+
+<Base
+  lang={lang}
+  contentLang={postLang}
+  title={post.data.title}
+  description={post.data.description}
+  path={path}
+  canonical={canonical}
+  alternatePath={alternatePath}
+  image={ogImage.src}
+  type="article"
+  publishedTime={post.data.date}
+>
+  <article class="post">
+    <header class="container post-head">
+      <p class="meta" lang={lang}>
+        <a class="category" href={href(lang, `/category/${post.data.category}/`)}>{categories[post.data.category][lang].name}</a>
+        <span aria-hidden="true">·</span>
+        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{t.minRead(readingMinutes)}</span>
+      </p>
+      <h1>{post.data.title}</h1>
+      {translation && (
+        <a class="translation-link" href={absoluteUrl(translation.lang, `/${translation.slug}/`)} hreflang={translation.lang} lang={translation.lang}>
+          {t.translationAvailable} →
+        </a>
+      )}
+    </header>
+
+    {fallback && (
+      <aside class="container" lang={lang}>
+        <div class="notice" role="note">
+          <strong>{t.onlyInOtherLanguage}</strong>
+          <span>{t.translateHint} <a href={translateUrl}>{t.translateLink}</a>.</span>
+        </div>
+      </aside>
+    )}
+
+    <div class="container cover-wrap">
+      <Image class="cover" src={post.data.cover} alt={post.data.coverAlt} widths={[640, 960, 1280, 1920]} sizes="(min-width: 1100px) 1036px, 100vw" loading="eager" fetchpriority="high" />
+    </div>
+
+    <div class="container">
+      <div class="prose" data-pagefind-body={fallback ? undefined : ''}>
+        <Content />
+      </div>
+
+      <footer class="post-foot">
+        {post.data.tags.length > 0 && (
+          <ul class="tags" aria-label={t.tags} lang={lang}>
+            {post.data.tags.map((tag) => <li><a class="chip" href={href(lang, `/tag/${tagSlug(tag)}/`)}>#{tag}</a></li>)}
+          </ul>
+        )}
+
+        {post.data.linkedin && (
+          <p class="linkedin" lang={lang}>
+            <a href={post.data.linkedin}>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+              {t.discussOnLinkedIn}
+            </a>
+          </p>
+        )}
+
+        <section class="card author" lang={lang}>
+          <img src="/tobias.jpg" alt="" width="72" height="72" loading="lazy" />
+          <div>
+            <p class="author-name">Tobias Wust</p>
+            <p class="meta">{t.authorRole}</p>
+            <a class="button" href={`${mainSiteUrls[lang]}/#contact`}>{t.authorCta}</a>
+          </div>
+        </section>
+
+        <nav class="pager" lang={lang} aria-label="Pagination">
+          {older ? <a class="card" href={href(lang, `/${older.slug}/`)}><span class="meta">← {t.previous}</span><span lang={older.postLang}>{older.post.data.title}</span></a> : <span />}
+          {newer ? <a class="card next" href={href(lang, `/${newer.slug}/`)}><span class="meta">{t.next} →</span><span lang={newer.postLang}>{newer.post.data.title}</span></a> : <span />}
+        </nav>
+      </footer>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .post-head {
+    max-width: calc(var(--prose-width) + 2 * var(--gutter));
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-l);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: var(--space-s);
+  }
+
+  .category {
+    color: var(--accent-text);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  h1 {
+    font-size: var(--step-4);
+  }
+
+  .translation-link {
+    display: inline-block;
+    margin-top: var(--space-m);
+    color: var(--accent-text);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .translation-link:hover { text-decoration: underline; }
+
+  .notice {
+    max-width: var(--prose-width);
+    margin: 0 auto var(--space-l);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: var(--space-s) var(--space-m);
+    border-left: 4px solid var(--wu-orange);
+    border-radius: 12px;
+    background: var(--card-bg);
+  }
+
+  .notice a { color: var(--accent-text); font-weight: 600; }
+
+  .cover-wrap :global(.cover) {
+    width: 100%;
+    border-radius: var(--card-radius);
+    border: 1px solid var(--card-border);
+  }
+
+  .prose {
+    max-width: var(--prose-width);
+    margin: var(--space-xl) auto 0;
+    font-size: var(--step-1);
+    line-height: 1.7;
+  }
+
+  .prose > :global(* + *) { margin-top: 1.1em; }
+
+  .prose :global(h2) {
+    margin-top: 2em;
+    font-size: var(--step-2);
+  }
+
+  .prose :global(h3) {
+    margin-top: 1.6em;
+    font-size: var(--step-1);
+  }
+
+  .prose :global(a) {
+    color: var(--accent-text);
+    text-underline-offset: 0.2em;
+  }
+
+  .prose :global(strong) { font-weight: 650; }
+
+  .prose :global(ul),
+  .prose :global(ol) { padding-left: 1.3em; }
+
+  .prose :global(li + li) { margin-top: 0.4em; }
+
+  .prose :global(li::marker) { color: var(--wu-orange); }
+
+  .prose :global(blockquote) {
+    padding: var(--space-s) var(--space-m);
+    border-left: 4px solid var(--wu-orange);
+    border-radius: 0 12px 12px 0;
+    background: var(--card-bg);
+    font-style: italic;
+  }
+
+  .prose :global(hr) {
+    border: 0;
+    height: 1px;
+    margin-block: 2.2em;
+    background: var(--card-border);
+  }
+
+  /* images and video break out of the text column a little */
+  .prose :global(p:has(> img)),
+  .prose :global(figure) {
+    margin-block: 2em;
+    margin-inline: min(-4vw, -1rem);
+  }
+
+  @media (max-width: 600px) {
+    .prose :global(p:has(> img)),
+    .prose :global(figure) { margin-inline: 0; }
+  }
+
+  .prose :global(img),
+  .prose :global(video) {
+    width: 100%;
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+  }
+
+  .prose :global(figcaption) {
+    margin-top: 0.6em;
+    color: var(--muted);
+    font-size: var(--step--1);
+    text-align: center;
+  }
+
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    padding: 0.1em 0.35em;
+    border-radius: 6px;
+    background: var(--code-bg);
+  }
+
+  .prose :global(pre) {
+    padding: var(--space-s) var(--space-m);
+    border-radius: 14px;
+    overflow-x: auto;
+    font-size: var(--step--1);
+  }
+
+  .prose :global(pre code) { padding: 0; background: none; }
+
+  .prose :global(em:only-child) { color: var(--muted); }
+
+  .post-foot {
+    max-width: var(--prose-width);
+    margin: var(--space-l) auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-l);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+  }
+
+  .linkedin a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent-text);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .linkedin a:hover { text-decoration: underline; }
+
+  .author {
+    display: flex;
+    gap: var(--space-m);
+    align-items: flex-start;
+    padding: var(--space-m);
+  }
+
+  .author:hover { translate: none; box-shadow: none; border-color: var(--card-border); }
+
+  .author img {
+    flex: none;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .author div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .author-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-1);
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-s);
+  }
+
+  .pager a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: var(--space-s) var(--space-m);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 600;
+  }
+
+  .pager .next { text-align: right; }
+
+  @media (max-width: 600px) {
+    .pager { grid-template-columns: 1fr; }
+    .author { flex-direction: column; }
+  }
+</style>

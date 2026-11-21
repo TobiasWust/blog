@@ -1,0 +1,148 @@
+---
+import { Image } from 'astro:assets';
+import { categories, formatDate, href, ui, type Locale } from '../i18n';
+import type { ListedPost } from '../lib/posts';
+
+interface Props {
+  lang: Locale;
+  item: ListedPost;
+  featured?: boolean;
+}
+
+const { lang, item, featured = false } = Astro.props;
+const t = ui[lang];
+const { post, slug, fallback, postLang, readingMinutes } = item;
+const url = href(lang, `/${slug}/`);
+---
+
+<article class:list={['card', 'post-card', { featured }]} lang={postLang}>
+  <a class="cover" href={url} tabindex="-1" aria-hidden="true">
+    <Image src={post.data.cover} alt="" widths={featured ? [640, 960, 1280] : [480, 720]} sizes={featured ? '(min-width: 900px) 60vw, 100vw' : '(min-width: 900px) 33vw, 100vw'} loading={featured ? 'eager' : 'lazy'} />
+  </a>
+  <div class="body">
+    <p class="meta" lang={lang}>
+      <span class="category">{categories[post.data.category][lang].name}</span>
+      <span aria-hidden="true">·</span>
+      <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
+      <span aria-hidden="true">·</span>
+      <span>{t.minRead(readingMinutes)}</span>
+      {fallback && <span class="chip lang-badge" title={t.onlyInOtherLanguage}>{t.otherLangBadge}</span>}
+    </p>
+    <h2><a href={url}>{post.data.title}</a></h2>
+    <p class="description">{post.data.description}</p>
+  </div>
+</article>
+
+<style>
+  .post-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .cover {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .cover :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left center;
+    transition: scale 0.4s ease;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .post-card:hover .cover :global(img) { scale: 1.03; }
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: var(--space-m);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .category {
+    color: var(--accent-text);
+    font-weight: 600;
+  }
+
+  .lang-badge {
+    padding: 0.05em 0.6em;
+    font-size: 0.75rem;
+  }
+
+  h2 {
+    font-size: var(--step-1);
+  }
+
+  h2 a {
+    text-decoration: none;
+  }
+
+  /* the whole card is clickable */
+  h2 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .description {
+    color: var(--muted);
+    font-size: var(--step--1);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (min-width: 900px) {
+    .featured {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+    }
+
+    .featured > * { min-width: 0; }
+
+    .featured .cover {
+      align-self: stretch;
+      aspect-ratio: auto;
+      position: relative;
+      min-height: 340px;
+      border-bottom: 0;
+      border-right: 1px solid var(--card-border);
+    }
+
+    /* the image fills the column without stretching the row */
+    .featured .cover :global(img) {
+      position: absolute;
+      inset: 0;
+    }
+
+    .featured .body {
+      justify-content: center;
+      padding: var(--space-l);
+    }
+
+    .featured h2 {
+      font-size: var(--step-2);
+    }
+
+    .featured .description {
+      font-size: var(--step-0);
+      -webkit-line-clamp: 5;
+    }
+  }
+</style>

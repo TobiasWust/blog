@@ -1,0 +1,63 @@
+---
+import { categories, categoryIds, href, ui, type Category, type Locale } from '../i18n';
+import type { ListedPost } from '../lib/posts';
+import PostCard from './PostCard.astro';
+
+interface Props {
+  lang: Locale;
+  posts: ListedPost[];
+  /** the active category; undefined = all */
+  active?: Category;
+  /** show the newest post as a large card */
+  featureFirst?: boolean;
+  /** categories that have posts, for the filter row */
+  usedCategories: Category[];
+}
+
+const { lang, posts, active, featureFirst = false, usedCategories } = Astro.props;
+const t = ui[lang];
+const [first, ...rest] = posts;
+---
+
+<nav class="filters" aria-label={t.categories}>
+  <a class="chip" href={href(lang, '/')} aria-current={active ? undefined : 'page'}>{t.all}</a>
+  {categoryIds.filter((c) => usedCategories.includes(c)).map((c) => (
+    <a class="chip" href={href(lang, `/category/${c}/`)} aria-current={active === c ? 'page' : undefined}>{categories[c][lang].name}</a>
+  ))}
+</nav>
+
+{featureFirst && first ? (
+  <>
+    <PostCard lang={lang} item={first} featured />
+    {rest.length > 0 && (
+      <>
+        <h2 class="section-title">{t.morePosts}</h2>
+        <div class="grid">{rest.map((item) => <PostCard lang={lang} item={item} />)}</div>
+      </>
+    )}
+  </>
+) : (
+  <div class="grid">{posts.map((item) => <PostCard lang={lang} item={item} />)}</div>
+)}
+
+<style>
+  .filters {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    margin-bottom: var(--space-l);
+    scrollbar-width: none;
+  }
+
+  .section-title {
+    margin: var(--space-xl) 0 var(--space-m);
+    font-size: var(--step-2);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: var(--space-m);
+  }
+</style>

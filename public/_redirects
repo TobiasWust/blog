@@ -1,0 +1,10 @@
+# One build, two domains. Each domain serves its language folder at the root.
+# Files that exist at the root (/_astro, /pagefind, /media, /tw.svg …) are served as they are,
+# because these rules are not forced.
+https://blog.wust.dev/*        /en/:splat  200
+https://blog.tobiaswust.de/*   /de/:splat  200
+
+# www and the Netlify default domain
+https://www.blog.wust.dev/*    https://blog.wust.dev/:splat  301!
+https://www.blog.tobiaswust.de/*  https://blog.tobiaswust.de/:splat  301!
+/                              /en/  302

@@ -1,0 +1,185 @@
+---
+import { ui, type Locale } from '../i18n';
+
+interface Props { lang: Locale }
+const { lang } = Astro.props;
+const t = ui[lang];
+// pagefind builds one index per page language; results carry /en/… or /de/… paths
+const stripPrefix = !(import.meta.env.DEV || import.meta.env.PUBLIC_LOCAL_PREVIEW === 'true');
+---
+
+<dialog class="search" lang={lang} data-search data-lang={lang} data-strip={stripPrefix ? 'true' : 'false'}
+  data-empty={t.searchEmpty} data-unavailable={t.searchUnavailable}>
+  <form method="dialog" class="search-box" role="search">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input type="search" name="q" placeholder={t.searchPlaceholder} aria-label={t.search} autocomplete="off" spellcheck="false" />
+    <button type="submit" class="close" aria-label={t.close}>Esc</button>
+  </form>
+  <ol class="results" aria-live="polite"></ol>
+</dialog>
+
+<script>
+  type PagefindResult = { data: () => Promise<{ url: string; excerpt: string; meta: { title?: string } }> };
+  type Pagefind = { options: (o: object) => Promise<void>; debouncedSearch: (q: string) => Promise<{ results: PagefindResult[] } | null> };
+
+  const dialog = document.querySelector<HTMLDialogElement>('[data-search]')!;
+  const input = dialog.querySelector('input')!;
+  const list = dialog.querySelector('.results')!;
+  let pagefind: Pagefind | null | undefined;
+
+  async function load(): Promise<Pagefind | null> {
+    if (pagefind !== undefined) return pagefind;
+    try {
+      const path = '/pagefind/pagefind.js';
+      pagefind = (await import(/* @vite-ignore */ path)) as Pagefind;
+      await pagefind.options({ excerptLength: 24 });
+    } catch {
+      pagefind = null; // not built yet (astro dev)
+    }
+    return pagefind;
+  }
+
+  function message(text: string) {
+    list.innerHTML = '';
+    const li = document.createElement('li');
+    li.className = 'message';
+    li.textContent = text;
+    list.append(li);
+  }
+
+  async function run() {
+    const query = input.value.trim();
+    if (!query) { list.innerHTML = ''; return; }
+    const pf = await load();
+    if (!pf) { message(dialog.dataset.unavailable!); return; }
+    const search = await pf.debouncedSearch(query);
+    if (!search) return; // superseded by a newer query
+    if (!search.results.length) { message(dialog.dataset.empty!); return; }
+    const items = await Promise.all(search.results.slice(0, 8).map((r) => r.data()));
+    list.innerHTML = '';
+    for (const item of items) {
+      const url = dialog.dataset.strip === 'true' ? item.url.replace(/^\/(en|de)\//, '/') : item.url;
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = url;
+      const title = document.createElement('strong');
+      title.textContent = item.meta.title ?? url;
+      const excerpt = document.createElement('p');
+      excerpt.innerHTML = item.excerpt; // pagefind escapes the text and only adds <mark>
+      a.append(title, excerpt);
+      li.append(a);
+      list.append(li);
+    }
+  }
+
+  function open() {
+    if (dialog.open) return;
+    dialog.showModal();
+    input.select();
+    load();
+  }
+
+  input.addEventListener('input', run);
+  // Escape in a search field would only clear it; close the dialog right away instead
+  input.addEventListener('keydown', (e) => { if (e.key === 'Escape') { e.preventDefault(); dialog.close(); } });
+  document.querySelectorAll('[data-search-open]').forEach((b) => b.addEventListener('click', open));
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); open(); }
+    if (e.key === '/' && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) { e.preventDefault(); open(); }
+  });
+  // click on the backdrop closes
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+</script>
+
+<style>
+  .search {
+    width: min(640px, calc(100% - 2rem));
+    max-height: min(70dvh, 640px);
+    margin: 10dvh auto auto;
+    padding: 0;
+    border: 1px solid var(--card-border);
+    border-radius: var(--card-radius);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+  }
+
+  .search[open] { display: flex; flex-direction: column; }
+
+  .search::backdrop {
+    background: rgba(14, 21, 56, 0.55);
+    backdrop-filter: blur(4px);
+  }
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid var(--card-border);
+    color: var(--muted);
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: none;
+    color: var(--text);
+    font: inherit;
+    font-size: var(--step-1);
+  }
+
+  input::-webkit-search-cancel-button { display: none; }
+
+  .close {
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    background: none;
+    color: var(--muted);
+    font: 500 0.75rem var(--font-body);
+    cursor: pointer;
+  }
+
+  .results {
+    list-style: none;
+    overflow-y: auto;
+    padding: 0.5rem;
+  }
+
+  .results:empty { display: none; }
+
+  .results :global(a) {
+    display: block;
+    padding: 0.75rem 0.9rem;
+    border-radius: 14px;
+    text-decoration: none;
+  }
+
+  .results :global(a:hover),
+  .results :global(a:focus-visible) { background: var(--tag); }
+
+  .results :global(strong) {
+    display: block;
+    font-family: var(--font-display);
+  }
+
+  .results :global(p) {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  .results :global(mark) {
+    background: none;
+    color: var(--accent-text);
+    font-weight: 600;
+  }
+
+  .results :global(.message) {
+    padding: 0.75rem 0.9rem;
+    color: var(--muted);
+  }
+</style>

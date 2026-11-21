@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import { href, ui } from '../i18n';
+// Netlify serves this page for both domains, so it speaks both languages
+---
+
+<Base lang="en" title="404" path="/404/" alternatePath={null}>
+  <meta slot="head" name="robots" content="noindex" />
+  <div class="container wrap">
+    <p class="code">404</p>
+    <section>
+      <h1>{ui.en.notFoundTitle}</h1>
+      <p>{ui.en.notFoundText} <a href={href('en', '/')}>{ui.en.back} →</a></p>
+    </section>
+    <section lang="de">
+      <h2>{ui.de.notFoundTitle}</h2>
+      <p>{ui.de.notFoundText} <a href={href('de', '/')}>{ui.de.back} →</a></p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .wrap { padding-block: var(--space-xl); display: grid; gap: var(--space-m); }
+  .code { font: 700 var(--step-4) var(--font-display); color: var(--accent-text); }
+  h1, h2 { font-size: var(--step-2); margin-bottom: 0.4rem; }
+  p { color: var(--muted); }
+  a { color: var(--accent-text); }
+</style>
