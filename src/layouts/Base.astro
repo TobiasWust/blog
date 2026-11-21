@@ -2,7 +2,7 @@
 import '@fontsource-variable/inter';
 import '@fontsource-variable/space-grotesk';
 import '../styles/global.css';
-import { absoluteUrl, canonicalUrl, href, mainSiteUrls, otherLocale, ui, type Locale } from '../i18n';
+import { absoluteUrl, canonicalUrl, gamesUrls, href, mainSiteUrls, otherLocale, ui, type Locale } from '../i18n';
 import Search from '../components/Search.astro';
 import 'wust-ui/header.css';
 import { header, iconButton, icons, themeScript } from 'wust-ui';
@@ -36,7 +36,10 @@ const ogImage = image ? new URL(image, canonicalUrl(lang)).toString() : undefine
 // the shared top bar of all wust.dev sites (github.com/TobiasWust/wust-ui)
 const headerHtml = header({
   brand: { href: href(lang, '/'), logoSrc: '/tw.svg', label: 'blog', ariaLabel: t.home },
-  links: [{ href: mainSiteUrls[lang], label: t.mainSite }],
+  links: [
+    { href: mainSiteUrls[lang], label: t.mainSite },
+    { href: gamesUrls[lang], label: t.games },
+  ],
   lang,
   langHrefs: { de: lang === 'de' ? href('de', path) : switchHref, en: lang === 'en' ? href('en', path) : switchHref },
   langLabel: lang === 'de' ? 'Sprache' : 'Language',
@@ -57,6 +60,8 @@ const headerHtml = header({
       <>
         <link rel="alternate" hreflang={lang} href={canonicalUrl(lang, path)} />
         <link rel="alternate" hreflang={other} href={canonicalUrl(other, alternatePath)} />
+        {/* English is the default, like on wust.dev and games.wust.dev */}
+        <link rel="alternate" hreflang="x-default" href={lang === 'en' ? canonicalUrl(lang, path) : canonicalUrl(other, alternatePath)} />
       </>
     )}
     <link rel="alternate" type="application/rss+xml" title={t.siteTitle} href={href(lang, '/rss.xml')} />
@@ -94,6 +99,7 @@ const headerHtml = header({
         <nav aria-label="Footer">
           <a href={href(lang, '/rss.xml')}>{t.rss}</a>
           <a href={mainSiteUrls[lang]}>{t.mainSite}</a>
+          <a href={gamesUrls[lang]}>{t.games}</a>
           <a href={`${mainSiteUrls[lang]}/imprint`}>{t.imprint}</a>
           <a href={`${mainSiteUrls[lang]}/privacy`}>{t.privacy}</a>
         </nav>

@@ -10,6 +10,10 @@ export const mainSiteUrls: Record<Locale, string> = {
   en: 'https://wust.dev',
   de: 'https://tobiaswust.de',
 };
+export const gamesUrls: Record<Locale, string> = {
+  en: 'https://games.wust.dev/en/',
+  de: 'https://games.wust.dev/de/',
+};
 
 export const otherLocale = (lang: Locale): Locale => (lang === 'en' ? 'de' : 'en');
 
@@ -91,6 +95,7 @@ export const ui = {
     rss: 'RSS feed',
     home: 'Blog home',
     mainSite: 'wust.dev',
+    games: 'Games',
     imprint: 'Imprint',
     privacy: 'Privacy',
     notFoundTitle: 'Page not found',
@@ -133,6 +138,7 @@ export const ui = {
     rss: 'RSS-Feed',
     home: 'Blog-Startseite',
     mainSite: 'tobiaswust.de',
+    games: 'Spiele',
     imprint: 'Impressum',
     privacy: 'Datenschutz',
     notFoundTitle: 'Seite nicht gefunden',

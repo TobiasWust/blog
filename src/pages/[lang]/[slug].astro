@@ -32,6 +32,26 @@ const canonical = fallback ? canonicalUrl(postLang, path) : canonicalUrl(lang, p
 const alternatePath = translation ? `/${translation.slug}/` : fallback ? path : null;
 const translateUrl = `https://translate.google.com/translate?sl=${postLang}&tl=${lang}&u=${encodeURIComponent(canonicalUrl(postLang, path))}`;
 const ogImage = await getImage({ src: post.data.cover, width: 1200, format: 'jpg' });
+
+// structured data for Google (schema.org BlogPosting); only on the original, not on a fallback copy
+const jsonLd = fallback ? null : {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  image: new URL(ogImage.src, canonicalUrl(lang)).toString(),
+  datePublished: post.data.date.toISOString(),
+  dateModified: (post.data.updated ?? post.data.date).toISOString(),
+  inLanguage: lang,
+  url: canonical,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+  keywords: post.data.tags.join(', '),
+  articleSection: categories[post.data.category][lang].name,
+  author: { '@type': 'Person', name: 'Tobias Wust', url: mainSiteUrls[lang] },
+  publisher: { '@type': 'Person', name: 'Tobias Wust', url: mainSiteUrls[lang] },
+  isPartOf: { '@type': 'Blog', name: t.siteTitle, url: canonicalUrl(lang) },
+  ...(translation ? { workTranslation: { '@id': canonicalUrl(translation.lang, `/${translation.slug}/`) } } : {}),
+};
 ---
 
 <Base
@@ -46,6 +66,7 @@ const ogImage = await getImage({ src: post.data.cover, width: 1200, format: 'jpg
   type="article"
   publishedTime={post.data.date}
 >
+  {jsonLd && <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   <article class="post">
     <header class="container post-head">
       <p class="meta" lang={lang}>
