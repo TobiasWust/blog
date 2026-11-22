@@ -54,4 +54,4 @@ You can try Morserunner 2 at **[morserunner-2.wust.io](https://morserunner-2.wus
 
 **Which task are you still letting your AI do by hand when there's long been a better tool for it?**
 
-*Images: real screens from Karakuri and Morserunner. The art in Morserunner 2 is AI-generated, the art in Morserunner 1 I drew myself. The labels in the images are in German.*
+*Images: real screens from Karakuri and Morserunner. The art in Morserunner 2 is AI-generated, the art in Morserunner 1 I drew myself.*
