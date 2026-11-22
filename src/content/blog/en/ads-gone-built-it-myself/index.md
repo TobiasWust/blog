@@ -15,7 +15,7 @@ coverAlt: "Cover image: Ads gone, built it myself, and where does the money go n
 
 You may know the idea from LinkedIn's "Queens": every row, every column and every colored zone gets exactly one piece, and pieces may not touch each other. In my version the pieces are paraglider pilots in thermal fields, which is why the game is called **Thermikdoku** (Thermik is German for thermals).
 
-![Start page with four difficulty levels and a daily flight, next to the flight rules](./1-start-und-regeln.png)
+![Start page with four difficulty levels and more modes to unlock, next to the flight rules](./1-start-und-regeln.png)
 
 ## One hour instead of a few days
 
