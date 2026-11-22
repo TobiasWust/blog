@@ -50,7 +50,7 @@ The obvious move would have been to push Claude towards better canvas drawings w
 
 ---
 
-You can try Morserunner 2 at **[morserunner-2.wust.io](https://morserunner-2.wust.io)**, along with the other games on **[games.wust.dev](https://games.wust.dev)**.
+You can try Morserunner 2 at **[morserunner-2.wust.io](https://morserunner-2.wust.io)**, along with the other games on **[games.wust.dev](https://games.wust.dev/en/)**.
 
 **Which task are you still letting your AI do by hand when there's long been a better tool for it?**
 
