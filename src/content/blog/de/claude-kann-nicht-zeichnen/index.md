@@ -50,7 +50,7 @@ Die naheliegende Reaktion wäre gewesen, Claude mit noch genaueren Prompts zu be
 
 ---
 
-Ausprobieren könnt ihr Morserunner 2 unter **[morserunner-2.wust.io](https://morserunner-2.wust.io)**, zusammen mit den anderen Spielen auf **[games.wust.dev](https://games.wust.dev)**.
+Ausprobieren könnt ihr Morserunner 2 unter **[morserunner-2.wust.io](https://morserunner-2.wust.io)**, zusammen mit den anderen Spielen auf **[littlelift.games](https://littlelift.games/en/games/)**.
 
 **Bei welcher Aufgabe lasst ihr eure KI noch etwas selbst machen, wofür es längst ein besseres Werkzeug gäbe?**
 

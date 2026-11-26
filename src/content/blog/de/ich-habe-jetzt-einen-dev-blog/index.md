@@ -29,7 +29,7 @@ Im Feed ist ein Artikel nach zwei, drei Tagen durchgescrollt. Auf dem Blog bleib
 
 ## Ein Ort für alles
 
-Bisher waren meine Projekte verteilt: die Website auf [wust.dev](https://wust.dev), die Spiele auf [games.wust.dev](https://games.wust.dev), die Artikel auf LinkedIn. Jetzt gehören sie sichtbar zusammen, mit derselben Menüleiste und gegenseitig verlinkt. Wer wissen will, woran ich arbeite und was ich dabei lerne, findet es an einem Ort.
+Bisher waren meine Projekte verteilt: die Website auf [wust.dev](https://wust.dev), die Spiele auf [littlelift.games](https://littlelift.games/en/games/), die Artikel auf LinkedIn. Jetzt gehören sie sichtbar zusammen, mit derselben Menüleiste und gegenseitig verlinkt. Wer wissen will, woran ich arbeite und was ich dabei lerne, findet es an einem Ort.
 
 ## Was sich für euch ändert
 

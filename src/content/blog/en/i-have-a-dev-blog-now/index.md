@@ -29,7 +29,7 @@ In the feed, an article has scrolled out of sight after two or three days. On th
 
 ## One place for everything
 
-Until now my projects were scattered: the website on [wust.dev](https://wust.dev), the games on [games.wust.dev](https://games.wust.dev/en/), the articles on LinkedIn. Now they visibly belong together, with the same top bar and linked to each other. If you want to know what I'm working on and what I learn along the way, it's all in one place.
+Until now my projects were scattered: the website on [wust.dev](https://wust.dev), the games on [littlelift.games](https://littlelift.games/en/games/), the articles on LinkedIn. Now they visibly belong together, with the same top bar and linked to each other. If you want to know what I'm working on and what I learn along the way, it's all in one place.
 
 ## What changes for you
 

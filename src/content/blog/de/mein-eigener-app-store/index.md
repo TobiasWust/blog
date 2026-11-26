@@ -13,7 +13,7 @@ coverAlt: "Titelbild: Mein eigener App Store: ohne Werbung, gefüllt von einer K
 
 ---
 
-Also habe ich mir an einem Tag zwei Dinge gebaut: **Karakuri**, eine Fabrik für Browser-Spiele, und **[games.wust.dev](https://games.wust.dev)**, den Launcher, in dem die Spiele landen. Gebaut haben beides die KI-Agenten in Grimoire, meiner Software Factory für eigene Werkzeuge.
+Also habe ich mir an einem Tag zwei Dinge gebaut: **Karakuri**, eine Fabrik für Browser-Spiele, und **[littlelift.games](https://littlelift.games/en/games/)**, den Launcher, in dem die Spiele landen. Gebaut haben beides die KI-Agenten in Grimoire, meiner Software Factory für eigene Werkzeuge.
 
 Der Name kommt von den japanischen Karakuri-Puppen: mechanische Figuren, die ohne Zutun Tee servieren. Genau das soll die Fabrik tun. Ich beschreibe ein Spiel in einem Satz, den Rest erledigt sie.
 
@@ -29,13 +29,13 @@ Ob das stimmt, prüft Karakuri selbst. Nach jeder Änderung öffnet es das Spiel
 
 Der eigentliche Gewinn liegt hinter dem Bauen. Früher blieb genau hier alles liegen: Hosting einrichten, Domain setzen, Beschreibung schreiben, Screenshots machen, in die Übersicht eintragen.
 
-Heute trage ich eine Domain ein und setze ein Häkchen. Karakuri richtet das Hosting ein und stellt das Spiel live. Claude schreibt Beschreibung und Tags auf Deutsch und Englisch und wählt die Kategorien. Vorschaubild und Screenshots kommen mit, und [games.wust.dev](https://games.wust.dev) baut sich neu. Jede neue Version eines Spiels zieht den Eintrag automatisch nach.
+Heute trage ich eine Domain ein und setze ein Häkchen. Karakuri richtet das Hosting ein und stellt das Spiel live. Claude schreibt Beschreibung und Tags auf Deutsch und Englisch und wählt die Kategorien. Vorschaubild und Screenshots kommen mit, und [littlelift.games](https://littlelift.games/en/games/) baut sich neu. Jede neue Version eines Spiels zieht den Eintrag automatisch nach.
 
 ![Links der grüne Check mit den Prüfungen, rechts der Tab „games.wust.dev“ mit den Texten auf Deutsch und Englisch](./2-check-und-portal.png)
 
 ## Ein Launcher statt eines Stores
 
-[games.wust.dev](https://games.wust.dev) lässt sich selbst als App auf den Homescreen legen. Am Handy wird die Seite dann zum Launcher: Suche und Kategorien liegen unten in Daumenreichweite, ein Tipp startet das Spiel. Keine Werbung, keine Anmeldung, kein Store, der mitentscheidet, was ich installieren darf.
+[littlelift.games](https://littlelift.games/en/games/) lässt sich selbst als App auf den Homescreen legen. Am Handy wird die Seite dann zum Launcher: Suche und Kategorien liegen unten in Daumenreichweite, ein Tipp startet das Spiel. Keine Werbung, keine Anmeldung, kein Store, der mitentscheidet, was ich installieren darf.
 
 ![Links games.wust.dev als Launcher am Handy, rechts GlideSweeper direkt aus dem Launcher gestartet](./3-launcher.png)
 
@@ -45,8 +45,8 @@ Ein Nachbau holt mir ein einzelnes Spiel ohne Werbung zurück. Das ist nett, abe
 
 ---
 
-Ausprobieren könnt ihr den Launcher unter **[games.wust.dev](https://games.wust.dev)**. Ohne Werbung, versprochen.
+Ausprobieren könnt ihr den Launcher unter **[littlelift.games](https://littlelift.games/en/games/)**. Ohne Werbung, versprochen.
 
 **Welches Spiel oder welche App würdet ihr euch als Erstes ohne Werbung nachbauen lassen?**
 
-*Screenshots: echte Oberflächen von Karakuri und [games.wust.dev](https://games.wust.dev).*
+*Screenshots: echte Oberflächen von Karakuri und [littlelift.games](https://littlelift.games/en/games/).*

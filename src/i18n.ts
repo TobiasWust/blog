@@ -11,8 +11,8 @@ export const mainSiteUrls: Record<Locale, string> = {
   de: 'https://tobiaswust.de',
 };
 export const gamesUrls: Record<Locale, string> = {
-  en: 'https://games.wust.dev/en/',
-  de: 'https://games.wust.dev/de/',
+  en: 'https://littlelift.games/en/games/',
+  de: 'https://littlelift.games/en/games/',
 };
 
 export const otherLocale = (lang: Locale): Locale => (lang === 'en' ? 'de' : 'en');
